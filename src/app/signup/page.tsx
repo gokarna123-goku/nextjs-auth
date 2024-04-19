@@ -1,30 +1,50 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import { axios } from "axios";
+import axios  from "axios";
+import toast from "react-hot-toast";
+
 
 
 export default function SignUpPage() {
+    const router = useRouter();
     const [user, setUser] = React.useState({
         username: "",
         email: "",
         password: "",
     })
 
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
+
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const [loading, setLoading] = React.useState(false);
+
     const onSignup = async () => {
         try {
-            const res = await fetch("http://localhost:3000/api/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(user),
-            });
-        } catch (error) {
+            setLoading(true);
+            const response = await axios.post("/api/users/signup", user);
+            // console.log(response.data, " signup successful");
 
+            router.push("/login");
+
+        }catch (error: any) {
+            console.log(error, " signup failed!");
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
         }
+        
     }
+
+    useEffect(() => {
+        if (user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
+            setButtonDisabled(false)
+        } else {
+            setButtonDisabled(true)
+        }
+    }, [user])
 
 
     return (
@@ -32,7 +52,9 @@ export default function SignUpPage() {
             <div className="w-[460px] h-auto rounded-md px-8 py-12 bg-neutral-950 shadow-md">
                 <div className="space-y-6 mb-7">
                     <div className="space-y-1.5">
-                        <h1 className="text-2xl">Signup</h1>
+                        <h1 className="text-2xl">
+                            {loading ? "Loading..." : "Sign Up"}
+                        </h1>
                         <p className="text-sm text-neutral-700">
                             Create a free account to start using our platform.
                         </p>
@@ -88,17 +110,25 @@ export default function SignUpPage() {
                                 value={user.password}
                                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                             />
+                            {/* show and hide password */}
+                            {/* <div className="flex items-center justify-between">
+                                <p className="text-sm text-neutral-700">
+                                    Show Password
+                                </p>
+                                <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+                            </div> */}
                         </div>
                     </div>
-                    <button onClick={onSignup} className="bg-violet-700 w-full h-11 text-neutral-100 flex items-center justify-center font-medium hover:bg-violet-800 rounded-md">
+                    <button onClick={onSignup}
+                        className={`w-full h-11 text-neutral-100 flex items-center justify-center font-medium rounded-md ease-out duration-300 ${buttonDisabled ? "bg-neutral-900 hover:bg-neutral-800 cursor-not-allowed" : "bg-violet-700 hover:bg-violet-800 cursor-pointer"}`}>
                         Create an Account
                     </button>
                 </div>
-                <div className="flex items-center justify-center gap-x-1 text-neutral-800 font-normal">
+                <div className="flex items-center justify-center gap-x-1 text-neutral-700 font-normal">
                     <p>Already have an account?</p>
                     <Link
                         href="/login"
-                        className="text-violet-700 hover:text-violet-800 ml-1"
+                        className="text-violet-900 hover:text-violet-800 ml-1 ease-out duration-300"
                     >
                         Login
                     </Link>
