@@ -53,7 +53,7 @@ export default function SignUpPage() {
                 <div className="space-y-6 mb-7">
                     <div className="space-y-1.5">
                         <h1 className="text-2xl">
-                            {loading ? "Loading..." : "Sign Up"}
+                            {loading ? "Creating account..." : "Sign Up"}
                         </h1>
                         <p className="text-sm text-neutral-700">
                             Create a free account to start using our platform.
@@ -121,7 +121,7 @@ export default function SignUpPage() {
                     </div>
                     <button onClick={onSignup}
                         className={`w-full h-11 text-neutral-100 flex items-center justify-center font-medium rounded-md ease-out duration-300 ${buttonDisabled ? "bg-neutral-900 hover:bg-neutral-800 cursor-not-allowed" : "bg-violet-700 hover:bg-violet-800 cursor-pointer"}`}>
-                        Create an Account
+                        {loading ? "signing..." : "Create an Account"}
                     </button>
                 </div>
                 <div className="flex items-center justify-center gap-x-1 text-neutral-700 font-normal">

@@ -55,7 +55,9 @@ export default function LoginPage() {
             <div className="w-[460px] h-auto rounded-md px-10 py-12 bg-neutral-950 shadow-md">
                 <div className="space-y-6 mb-7">
                     <div className="space-y-1.5">
-                        <h1 className="text-2xl">Login</h1>
+                        <h1 className="text-2xl">
+                            {loading ? "Logging in..." : "Login"}
+                        </h1>
                         <p className="text-sm text-neutral-700">
                             Welcome back. Please enter your details.
                         </p>
