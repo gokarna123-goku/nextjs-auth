@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios  from "axios";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 
@@ -21,6 +21,7 @@ export default function SignUpPage() {
 
     const [loading, setLoading] = React.useState(false);
 
+
     const onSignup = async () => {
         try {
             setLoading(true);
@@ -29,13 +30,13 @@ export default function SignUpPage() {
 
             router.push("/login");
 
-        }catch (error: any) {
+        } catch (error: any) {
             console.log(error, " signup failed!");
             toast.error(error.message);
         } finally {
             setLoading(false);
         }
-        
+
     }
 
     useEffect(() => {
@@ -45,6 +46,7 @@ export default function SignUpPage() {
             setButtonDisabled(true)
         }
     }, [user])
+
 
 
     return (
@@ -94,7 +96,7 @@ export default function SignUpPage() {
                                 onChange={(e) => setUser({ ...user, email: e.target.value })}
                             />
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                             <label
                                 htmlFor="password"
                                 className="text-neutral-500 block"
@@ -102,27 +104,43 @@ export default function SignUpPage() {
                                 Password
                             </label>
                             <input
-                                type="password"
+                                type={showPassword ? 'text' : 'password'} 
                                 name="password"
                                 id="password"
-                                className="w-full h-11 text-neutral-300 bg-transparent outline-none ring-1 ring-neutral-800 focus:ring-1 focus:ring-violet-500 rounded px-3 placeholder:text-neutral-700"
+                                className="w-full h-11 text-neutral-300 bg-transparent outline-none ring-1 ring-neutral-800 focus:ring-1 focus:ring-violet-500 rounded ps-3 pr-10 placeholder:text-neutral-700"
                                 placeholder="Enter your password"
                                 value={user.password}
                                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                             />
                             {/* show and hide password */}
-                            {/* <div className="flex items-center justify-between">
-                                <p className="text-sm text-neutral-700">
-                                    Show Password
-                                </p>
-                                <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
-                            </div> */}
+                            <div className="flex items-center justify-between absolute right-3 top-[2.2rem]">
+                                {!showPassword ? (
+                                    <button className="text-neutral-700" onClick={() => setShowPassword(true)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-eye">
+                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                    </button>
+                                ) : (
+                                    <button className="text-neutral-700" onClick={() => setShowPassword(false)}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-eye-off"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                    <button onClick={onSignup}
-                        className={`w-full h-11 text-neutral-100 flex items-center justify-center font-medium rounded-md ease-out duration-300 ${buttonDisabled ? "bg-neutral-900 hover:bg-neutral-800 cursor-not-allowed" : "bg-violet-700 hover:bg-violet-800 cursor-pointer"}`}>
-                        {loading ? "signing..." : "Create an Account"}
-                    </button>
+                    {buttonDisabled ? (
+                        <button disabled
+                            className="w-full h-11 text-neutral-600 flex items-center justify-center font-medium rounded-md ease-out duration-300 bg-neutral-900/60 cursor-not-allowed">
+                            {loading ? "signing..." : "Create an Account"}
+                        </button>
+                    ) : (
+                        <button onClick={onSignup}
+                            className="w-full h-11 text-neutral-100 flex items-center justify-center bg-violet-700 hover:bg-violet-800 cursor-pointer font-medium rounded-md ease-out duration-300">
+                            {loading ? "signing..." : "Create an Account"}
+                        </button>
+                    )}
                 </div>
                 <div className="flex items-center justify-center gap-x-1 text-neutral-700 font-normal">
                     <p>Already have an account?</p>
